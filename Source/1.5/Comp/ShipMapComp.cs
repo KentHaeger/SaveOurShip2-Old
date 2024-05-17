@@ -1747,7 +1747,7 @@ namespace SaveOurShip2
 									shuttles.Add(vehicle);
 							}
 							List<VehiclePawn> shuttlesToBeFilled = new List<VehiclePawn>(shuttles);
-							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge));
+							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => !(pawn is VehiclePawn) && (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge));
 							Log.Message("[SoS2] Planning shuttle missions. Found " + shuttlesToBeFilled.Count + " combat-ready shuttles and " + pawnsToBoard.Count() + " potential pilots.");
 							foreach (Pawn p in pawnsToBoard)
 							{
@@ -1797,7 +1797,7 @@ namespace SaveOurShip2
 								}
 							}
 							List<VehiclePawn> shuttlesToBeFilled = new List<VehiclePawn>(shuttles);
-							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge) && pawn.kindDef.combatPower > 40);
+							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => !(pawn is VehiclePawn) && (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge) && pawn.kindDef.combatPower > 40);
 							Log.Message("[SoS2] Planning boarding missions. Found " + shuttlesToBeFilled.Count + " boarding-ready shuttles and " + pawnsToBoard.Count() + " potential boarders.");
 							foreach (Pawn p in pawnsToBoard)
 							{
@@ -2513,8 +2513,11 @@ namespace SaveOurShip2
         }
 		public ShuttleMissionData RegisterShuttleMission(VehiclePawn shuttle, ShuttleMission mission)
         {
-			if(shuttle.Spawned)
+			if (shuttle.Spawned)
+			{
+				map.GetComponent<VehicleReservationManager>().ClearReservedFor(shuttle);
 				shuttle.DeSpawn();
+			}
 			ShuttlesOnMissions.TryAddOrTransfer(shuttle);
 			ShuttleMissionData data = new ShuttleMissionData();
 			data.shuttle = shuttle;

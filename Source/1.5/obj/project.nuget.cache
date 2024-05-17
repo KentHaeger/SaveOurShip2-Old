@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dKZ8QFA1CNFFVTlPWhhDoCK58RfHX6/v+m2wIt5Ub9Su9QxaJ9UcnnJxs3cbqvSnaRu8yQkStwRgTByUaqgwtA==",
+  "dgSpecHash": "YnB2IqGM8V/dBu4JSMWBWyY2GWWYY2k2yv3MTu/a09W87G0IS+c+XlrzvVePO6EXrT8sVAeuF7lVBvNbOU6TAQ==",
   "success": true,
-  "projectFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2Experimental-main\\Source\\1.5\\RimworldMod.csproj",
+  "projectFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\RimworldMod.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kenth\\.nuget\\packages\\krafs.publicizer\\2.2.1\\krafs.publicizer.2.2.1.nupkg.sha512"
   ],

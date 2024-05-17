@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2Experimental-main\\Source\\1.5\\RimworldMod.csproj": {}
+    "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\RimworldMod.csproj": {}
   },
   "projects": {
-    "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2Experimental-main\\Source\\1.5\\RimworldMod.csproj": {
+    "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\RimworldMod.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2Experimental-main\\Source\\1.5\\RimworldMod.csproj",
+        "projectUniqueName": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\RimworldMod.csproj",
         "projectName": "RimworldMod",
-        "projectPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2Experimental-main\\Source\\1.5\\RimworldMod.csproj",
+        "projectPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\RimworldMod.csproj",
         "packagesPath": "C:\\Users\\kenth\\.nuget\\packages\\",
-        "outputPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2Experimental-main\\Source\\1.5\\obj\\",
+        "outputPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
