@@ -9,6 +9,5 @@ C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\1.5\Ass
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\1.5\Assemblies\ShipsHaveInsides.pdb
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\Source\1.5\obj\Debug\RimworldMod.csproj.AssemblyReference.cache
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\Source\1.5\obj\Debug\RimworldMod.csproj.CoreCompileInputs.cache
-C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\Source\1.5\obj\Debug\RimworldMod.csproj.CopyComplete
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\Source\1.5\obj\Debug\ShipsHaveInsides.dll
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SaveOurShip2\Source\1.5\obj\Debug\ShipsHaveInsides.pdb
