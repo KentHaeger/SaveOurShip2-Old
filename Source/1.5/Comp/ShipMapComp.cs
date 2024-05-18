@@ -393,19 +393,16 @@ namespace SaveOurShip2
 			fuel = 0;
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
-				if (ship.CanFire() && ship.HasMannedBridge() && ship.HasRCS())
+				foreach (CompEngineTrail engine in ship.Engines.Where(e => e.FuelUse > 0))
 				{
-					foreach (CompEngineTrail engine in ship.Engines.Where(e => e.FuelUse > 0))
-					{
+					fuel += engine.refuelComp.Fuel;
+					if (engine.PodFueled)
 						fuel += engine.refuelComp.Fuel;
-						if (engine.PodFueled)
-							fuel += engine.refuelComp.Fuel;
-						engines.Add(engine);
-					}
-					foreach (CompShipBay bay in ship.Bays.Where(t => t is CompShipBaySalvage))
-					{
-						maxMass += ((CompShipBaySalvage)bay).SalvageWeight;
-					}
+					engines.Add(engine);
+				}
+				foreach (CompShipBay bay in ship.Bays.Where(t => t is CompShipBaySalvage))
+				{
+					maxMass += ((CompShipBaySalvage)bay).SalvageWeight;
 				}
 			}
 			return engines;
