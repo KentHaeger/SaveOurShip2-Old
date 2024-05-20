@@ -4987,6 +4987,18 @@ namespace SaveOurShip2
         }
 	}
 
+	[HarmonyPatch(typeof(WorkGiver_BuildRoof), "ShouldSkip")]
+	public static class NoRoofsInSpace
+    {
+		public static void Postfix(ref bool __result, Pawn pawn)
+        {
+			if(pawn.Map.IsSpace())
+            {
+				__result = true;
+            }
+        }
+    }
+
 	//TEMPORARY until I talk to Phil and see how to fix this properly
 	[HarmonyPatch(typeof(CompUpgradeTree), "CompTickRare")]
 	public static class TEMPStopRedErrorOnTakeoff

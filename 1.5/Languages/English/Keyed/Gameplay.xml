@@ -104,11 +104,11 @@
 	<SoS.TradeTradeWith>Ask to trade with them.</SoS.TradeTradeWith>
 	<SoS.TradeTradeDecline>{0} does not want to trade with you due to your notoriety.</SoS.TradeTradeDecline>
 	<SoS.PirateTradeDemand>Demand they hand over their cargo (This is an act of piracy!)</SoS.PirateTradeDemand>
-	<SoS.TradeTryingToFlee> has closed comms and is trying to flee!</SoS.TradeTryingToFlee>
+	<SoS.TradeTryingToFlee>{0} has closed comms and is trying to flee!</SoS.TradeTryingToFlee>
 	<SoS.TradeAttack>After them!</SoS.TradeAttack>
 	<SoS.TradeFlee>Let them go.</SoS.TradeFlee>
 	<SoS.TradePayBounty>Pay your bounty (cost: {0} silver)</SoS.TradePayBounty>
-	<SoS.NotEnoughForBounty>need {0} silver near trade beacons</SoS.NotEnoughForBounty>
+	<SoS.NotEnoughForBounty>You need {0} silver near trade beacons</SoS.NotEnoughForBounty>
 	<SoS.PirateHail>A pirate ship is attempting to hail you.\n</SoS.PirateHail>
 	<SoS.PirateHailPirate>Surely they know of your notoriety.</SoS.PirateHailPirate>
 	<SoS.PirateHailNormal>If you do not answer they will most likely attack.</SoS.PirateHailNormal>
