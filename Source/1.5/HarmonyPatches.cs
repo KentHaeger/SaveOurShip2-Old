@@ -4968,6 +4968,7 @@ namespace SaveOurShip2
 			if (__instance.ShouldBeDead() && __instance.hediffSet.GetFirstHediff<HediffPawnIsHologram>() != null)
 			{
 				__instance.hediffSet.GetFirstHediff<HediffPawnIsHologram>().consciousnessSource.GetComp<CompBuildingConsciousness>().HologramDestroyed(true);
+				__instance.Notify_Resurrected();
 				__result = true;
 			}
         }

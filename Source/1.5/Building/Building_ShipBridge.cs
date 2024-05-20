@@ -1015,6 +1015,7 @@ namespace SaveOurShip2
 								Ship.CreateShipSketchIfFuelPct(1f, playerShipMap, 0, true);
 							else
 								ShipCountdown.InitiateCountdown(this);
+							QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
 						}
 					},
 					hotKey = KeyBindingDefOf.Misc1,
