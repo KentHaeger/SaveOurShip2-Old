@@ -2384,6 +2384,15 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(GridsUtility), "GetFirstBlight")]
+	public static class DisableForMoveBlight
+    {
+		public static bool Prefix()
+        {
+			return !ShipInteriorMod2.MoveShipFlag;
+        }
+    }
+
 	[HarmonyPatch(typeof(Designator_Deconstruct), "CanDesignateThing")]
 	public static class ChangeReason
 	{
@@ -4999,6 +5008,15 @@ namespace SaveOurShip2
         }
     }
 
+	[HarmonyPatch(typeof(AutoBuildRoofAreaSetter), "TryGenerateAreaNow", new Type[] { typeof(Room) })]
+	public static class NoRoofInSpace
+	{
+		private static bool Prefix(Room room)
+		{
+			return !room.Map.IsSpace();
+		}
+	}
+
 	//TEMPORARY until I talk to Phil and see how to fix this properly
 	[HarmonyPatch(typeof(CompUpgradeTree), "CompTickRare")]
 	public static class TEMPStopRedErrorOnTakeoff
@@ -5049,6 +5067,115 @@ namespace SaveOurShip2
 			if (ThingOwnerUtility.AnyParentIs<VehiclePawn>(pawn) || ThingOwnerUtility.AnyParentIs<AerialVehicleInFlight>(pawn))
 				__result = true;
         }
+    }
+
+	[HarmonyPatch(typeof(WorkGiver_BringUpgradeMaterial), "JobOnThing")]
+	public static class TEMPFixVFUpgradeCount //Fix the upgrade bug, since Phil hasn't had time to
+	{
+		public static bool Prefix()
+        {
+			return false;
+        }
+
+		public static void Postfix(WorkGiver_BringUpgradeMaterial __instance, Pawn pawn, Thing t, ref Job __result, bool forced=false)
+        {
+			VehiclePawn vehicle = t as VehiclePawn;
+			if (vehicle == null)
+			{
+				__result = null;
+				return;
+			}
+			if (pawn.Faction != t.Faction)
+			{
+				__result = null;
+				return;
+			}
+			if (!__instance.JobAvailable(vehicle))
+			{
+				__result = null;
+				return;
+			}
+			if (__instance.ThingDefs(vehicle).NotNullAndAny() && ReachabilityUtility.CanReach(pawn, new LocalTargetInfo(t.Position), (PathEndMode)2, (Danger)3, false, false, (TraverseMode)0))
+			{
+				Thing thing = __instance.FindThingToPack(vehicle, pawn);
+				if (thing != null)
+				{
+					int countLeft = __instance.CountLeftToPack(vehicle, pawn, new ThingDefCount(thing.def, vehicle.compUpgradeTree.upgrade.node.MaterialsRequired(vehicle).FirstOrDefault(thingDefClassCount => thingDefClassCount.thingDef == thing.def).count));
+					int jobCount = Mathf.Min(thing.stackCount, countLeft);
+					if (jobCount > 0)
+					{
+						Job job = JobMaker.MakeJob(__instance.JobDef, thing, t);
+						job.count = jobCount;
+						__result = job;
+						Log.Message("Found some stuff to shove in a shuttle hole: " + jobCount + " of " + thing);
+						return;
+					}
+				}
+			}
+			__result = null;
+		}
+	}
+
+	[HarmonyPatch(typeof(WorkGiver_BringUpgradeMaterial), "FindThingToPack")]
+	public static class TEMPFixVFUpgradeCount2 //Fix the upgrade bug, since Phil hasn't had time to
+    {
+		public static bool Prefix()
+        {
+			return false;
+        }
+
+		public static void Postfix(WorkGiver_BringUpgradeMaterial __instance, VehiclePawn vehicle, Pawn pawn, ref Thing __result)
+        {
+			Thing result = null;
+			IEnumerable<ThingDefCountClass> thingDefs = vehicle.compUpgradeTree.upgrade.node.MaterialsRequired(vehicle);
+			if (thingDefs.NotNullAndAny())
+			{
+				foreach (ThingDefCount item in thingDefs)
+				{
+					ThingDefCount thingDefCount = item;
+					int countLeftToTransfer = __instance.CountLeftToPack(vehicle, pawn, thingDefCount);
+					if (countLeftToTransfer > 0)
+					{
+						WorkGiver_BringUpgradeMaterial.neededThingDefs.Add(thingDefCount.thingDef);
+					}
+				}
+				if (!GenCollection.Any<ThingDef>(WorkGiver_BringUpgradeMaterial.neededThingDefs))
+				{
+					__result = null;
+					return;
+				}
+				result = __instance.ClosestHaulable(pawn, (ThingRequestGroup)12, ValidThingDef);
+				if (result == null)
+				{
+					result = __instance.ClosestHaulable(pawn, (ThingRequestGroup)3, ValidThingDef);
+				}
+				WorkGiver_BringUpgradeMaterial.neededThingDefs.Clear();
+			}
+			__result = result; 
+			bool ValidThingDef(Thing thing)
+			{
+				return WorkGiver_BringUpgradeMaterial.neededThingDefs.Contains(thing.def) && ReservationUtility.CanReserve(pawn, thing, 1, -1, (ReservationLayerDef)null, false) && !ForbidUtility.IsForbidden(thing, pawn.Faction);
+			}
+		}
+    }
+
+	[HarmonyPatch(typeof(VehicleStatHandler), "SubtractUpgradeableStatValue")]
+	public static class TEMPFixVFUpgradeStats //Fix a bug that's almost as boneheaded as mine!
+    {
+		public static bool Prefix()
+        {
+			return false;
+        }
+
+		public static void Postfix(StatDef statDef, float value, VehiclePawn ___vehicle, Dictionary<StatDef, StatOffset> ___baseStatOffsets)
+        {
+			if (!___baseStatOffsets.TryGetValue(statDef, out StatOffset statOffset))
+			{
+				___baseStatOffsets[statDef] = new StatOffset(___vehicle, statDef);
+				statOffset = ___baseStatOffsets[statDef];
+			}
+			statOffset.Offset -= value;
+		}
     }
 
 	/*causes lag

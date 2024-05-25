@@ -137,7 +137,7 @@ namespace SaveOurShip2
 		public const float altitudeNominal = 1000f; //nominal altitude for ship map background render
 		public const float altitudeLand = 110f; //min altitude for ship map background render
 		public const float crittersleepBodySize = 0.7f;
-		public const float pctFuelLocal = 0.02f;
+		public const float pctFuelLocal = 0.0f;
 		public const float pctFuelMap = 0.05f;
 		public const float pctFuelSpace = 0.5f; //check is 1 since we dont want ships to crash right after takeoff
 		public const float pctFuelLand = 0.1f;
@@ -1938,6 +1938,7 @@ namespace SaveOurShip2
 			List<IntVec3> fireExplosions = new List<IntVec3>();
 			List<CompEngineTrail> nukeExplosions = new List<CompEngineTrail>();
 			List<Pawn> pawns = new List<Pawn>();
+			List<Plant> plants = new List<Plant>();
 			int rotb = 4 - rotNum;
 
 			// Transforms vector from initial position to final according to desired movement/rotation.
@@ -2069,6 +2070,8 @@ namespace SaveOurShip2
 								return;
 							}*/
 						}
+						else if (t is Plant plant)
+							plants.Add(plant);
 						toMoveThings.Add(t);
 					}
 				}
@@ -2079,6 +2082,18 @@ namespace SaveOurShip2
 						toMoveThings.Add(carriedt);
 					}
 					//p.CurJob.Clear();
+				}
+				foreach(Plant plant in plants)
+                {
+					try
+					{
+						if(plant.Spawned)
+							plant.DeSpawn();
+					}
+					catch (Exception e)
+					{
+						Log.Error("[SoS2] Error despawning plant: " + e);
+					}
 				}
 
 				if (sourceMap.zoneManager.ZoneAt(pos) != null && !zonesToCopy.Contains(sourceMap.zoneManager.ZoneAt(pos)))
@@ -2281,7 +2296,8 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				if(!(spawnThing is Plant))
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
 			}
 			if (devMode)
 				watch.Record("moveThings");
@@ -2436,6 +2452,10 @@ namespace SaveOurShip2
 			{
 				Log.Warning("" + e);
 			}
+			foreach(Plant plant in plants)
+            {
+				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, fac);
+			}
 			if (devMode)
 				watch.Record("moveTerrain");
 			//move fog
@@ -2580,7 +2600,7 @@ namespace SaveOurShip2
 			if (fac != null && !(spawnThing is Pawn) && spawnThing.def.CanHaveFaction)
 				spawnThing.SetFaction(fac);
 
-			spawnThing.SpawnSetup(targetMap, true);
+			spawnThing.SpawnSetup(targetMap, !spawnThing.def.HasModExtension<SoSSpawnOverride>());
 
 			if(spawnThing is Pawn pawn)
 				pawn.pather.ResetToCurrentPosition();

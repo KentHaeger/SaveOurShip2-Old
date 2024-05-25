@@ -606,6 +606,11 @@ namespace SaveOurShip2
 			if (ShipsOnMap.ContainsKey(index))
 			{
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + index + " Removed from cache.");
+				foreach(IntVec3 cell in ShipsOnMap[index].Area)
+                {
+					if (MapShipCells.ContainsKey(cell))
+						MapShipCells.Remove(cell);
+                }
 				ShipsOnMap.Remove(index);
 			}
 		}
@@ -2458,6 +2463,8 @@ namespace SaveOurShip2
 			}
 			foreach (ShuttleMissionData mission in OriginMapComp.TargetMapComp.ShuttleMissions.ListFullCopy())
 			{
+				if (mission.shuttle.Faction != Faction.OfPlayer && mission.mission == ShuttleMission.BOARD)
+					mission.mission = ShuttleMission.RETURN;
 				DeRegisterShuttleMission(mission);
 			}
 
@@ -2532,7 +2539,7 @@ namespace SaveOurShip2
 			if (!destroyed)
             {
 				Map mapToSpawnIn;
-				if (OriginMapComp.ShipMapState == ShipMapState.nominal)
+				if (OriginMapComp.ShipMapState == ShipMapState.nominal && mission.shuttle.Faction==Faction.OfPlayer)
 					mapToSpawnIn = OriginMapComp.map;
 				else
 				{

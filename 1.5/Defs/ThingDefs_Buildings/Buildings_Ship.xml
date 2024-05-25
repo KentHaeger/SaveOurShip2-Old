@@ -3567,4 +3567,9 @@
 		</building>
 		<rotatable>false</rotatable>
 	</ThingDef>
+	<ThingDef ParentName="BuildingShipHullBase">
+		<defName>ShipInside_PassiveCooler</defName>
+		<label>dummy def</label>
+		<description>Don't use this. It exists only because Dubs has so far refused to fix things on his end.</description>
+	</ThingDef>
 </Defs>
