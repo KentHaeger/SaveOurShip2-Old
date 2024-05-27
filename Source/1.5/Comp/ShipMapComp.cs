@@ -618,7 +618,9 @@ namespace SaveOurShip2
 		{
 			if (MapShipCells.ContainsKey(vec))
 			{
-				return MapShipCells[vec].Item1;
+				int index = MapShipCells[vec].Item1;
+				if(ShipsOnMap.ContainsKey(index))
+					return index;
 			}
 			return -1;
 		}

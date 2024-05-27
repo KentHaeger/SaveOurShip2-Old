@@ -3080,7 +3080,19 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(Recipe_InstallArtificialBodyPart), "GetPartsToApplyOn")]
+	[HarmonyPatch(typeof(SurgeryOutcomeSuccess), "Apply")]
+	public static class FormgelsCanTotallyUseBionics
+    {
+		public static void Postfix(ref bool __result, Pawn patient)
+        {
+			if (ShipInteriorMod2.IsHologram(patient))
+            {
+				__result = true;
+            }
+        }
+    }
+
+	/*[HarmonyPatch(typeof(Recipe_InstallArtificialBodyPart), "GetPartsToApplyOn")]
 	public static class FormgelsCannotUseBionics
 	{
 		public static void Postfix(ref IEnumerable<BodyPartRecord> __result, Pawn pawn)
@@ -3118,7 +3130,7 @@ namespace SaveOurShip2
 			if (ShipInteriorMod2.IsHologram(pawn))
 				__result = new List<BodyPartRecord>();
 		}
-	}
+	}*/
 
 	[HarmonyPatch(typeof(Recipe_RemoveBodyPart), "GetPartsToApplyOn")]
 	public static class FormgelsHaveNoOrgans

@@ -113,8 +113,8 @@ namespace SaveOurShip2
 			{
 				if (hediff.def.spawnThingOnRemoved != null && hediff.def != HediffDefOf.MechlinkImplant)
 				{
-					Consciousness.health.RemoveHediff(hediff);
-					GenPlace.TryPlaceThing(ThingMaker.MakeThing(hediff.def.spawnThingOnRemoved), Consciousness.Position, parent.Map, ThingPlaceMode.Near);
+					/*Consciousness.health.RemoveHediff(hediff);
+					GenPlace.TryPlaceThing(ThingMaker.MakeThing(hediff.def.spawnThingOnRemoved), Consciousness.Position, parent.Map, ThingPlaceMode.Near);*/
 				}
 				else
 				{
@@ -167,11 +167,11 @@ namespace SaveOurShip2
 			Consciousness.story.skinColorOverride = HologramColor;
 			if (graphicsDirty)
 				Consciousness.Drawer.renderer.SetAllGraphicsDirty();
-			HologramDestroyed(false);
+			HologramDestroyed(false, setup:true);
 			Consciousness.ageTracker.RecalculateLifeStageIndex();
 		}
 
-		public void HologramDestroyed(bool decohere, bool goneForGood = false)
+		public void HologramDestroyed(bool decohere, bool goneForGood = false, bool setup=false)
 		{
 			if (Consciousness == null)
 				return;
@@ -180,10 +180,37 @@ namespace SaveOurShip2
 				Consciousness.carryTracker.TryDropCarriedThing(Consciousness.Position, ThingPlaceMode.Near, out thing);
 			if (Consciousness.Spawned)
 			{
-				foreach(Apparel apparel in Consciousness.apparel.WornApparel)
-					apparel.wornByCorpseInt = false;
 				Consciousness.apparel.DropAll(Consciousness.Position);
 				Consciousness.inventory.DropAllNearPawn(Consciousness.Position);
+			}
+			else if(Consciousness.ParentHolder!=null)
+			{
+				Consciousness.ParentHolder.GetDirectlyHeldThings().TryAddRangeOrTransfer(Consciousness.apparel.WornApparel);
+				Consciousness.ParentHolder.GetDirectlyHeldThings().TryAddRangeOrTransfer(Consciousness.inventory.GetDirectlyHeldThings());
+			}
+			if (!setup)
+			{
+				List<Hediff> hediffs = Consciousness.health.hediffSet.hediffs.ToList();
+				foreach (Hediff hediff in hediffs)
+				{
+					if (hediff.def.spawnThingOnRemoved != null && hediff.def != HediffDefOf.MechlinkImplant)
+					{
+						Consciousness.health.RemoveHediff(hediff);
+						if (Consciousness.Spawned)
+							GenPlace.TryPlaceThing(ThingMaker.MakeThing(hediff.def.spawnThingOnRemoved), Consciousness.Position, parent.Map, ThingPlaceMode.Near);
+						else if (Consciousness.ParentHolder != null)
+						{
+							Thing bionic = ThingMaker.MakeThing(hediff.def.spawnThingOnRemoved);
+							if (!Consciousness.ParentHolder.GetDirectlyHeldThings().TryAdd(bionic))
+							{
+								if (Consciousness.ParentHolder is Thing parentThing && parentThing.Spawned)
+									GenPlace.TryPlaceThing(bionic, parentThing.Position, parentThing.Map, ThingPlaceMode.Near);
+								else if (Consciousness.ParentHolder is ThingComp parentComp && parentComp.parent.Spawned)
+									GenPlace.TryPlaceThing(bionic, parentComp.parent.Position, parentComp.parent.Map, ThingPlaceMode.Near);
+							}
+						}
+					}
+				}
 			}
 			if (decohere)
 			{
