@@ -51,7 +51,7 @@ namespace SaveOurShip2
 
 		public List<Hediff> MissingParts()
 		{
-			return pawn.health.hediffSet.hediffs.Where(hediff => hediff is Hediff_MissingPart).ToList();
+			return pawn.health.hediffSet.hediffs.Where(hediff => hediff is Hediff_MissingPart && !(hediff.Part.def == BodyPartDefOf.Eye && pawn.Ideo != null && pawn.Ideo.IdeoApprovesOfBlindness())).ToList();
 		}
 
 		public List<Hediff> CureableHediffs()
