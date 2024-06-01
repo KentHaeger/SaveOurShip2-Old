@@ -753,6 +753,7 @@ namespace SaveOurShip2
 			attackedTradeship = false;
 			//target or create map + spawn ships
 			ShipCombatOriginMap = map;
+			targetMapComp = null;
 			if (targetMap == null)
 				ShipCombatTargetMap = SpawnEnemyShipMap(passingShip, fac, fleet, bounty);
 			else
@@ -760,6 +761,7 @@ namespace SaveOurShip2
 			//if ship is derelict switch to "encounter"
 			if (TargetMapComp.ShipMapState == ShipMapState.isGraveyard)
 			{
+				Log.Message("Can't attack graveyards");
 				ShipCombatTargetMap = null; //td no ship combat vs no ship maps, for now
 				targetMapComp = null;
 				return;
@@ -1460,7 +1462,7 @@ namespace SaveOurShip2
 		}
 		public void SlowTick(int tick)
 		{
-			foreach (SpaceShipCache ship in ShipsOnMap.Values)
+			foreach (SpaceShipCache ship in ShipsOnMap.Values.ToList())
 			{
 				ship.SlowTick();
 			}
@@ -2440,6 +2442,8 @@ namespace SaveOurShip2
 						//if origin has grave with a ship, grave starts combat with enemy
 						if (OriginMapComp.GraveComp.MapRootListAll.Any() && !OriginMapComp.attackedTradeship)
 						{
+							OriginMapComp.GraveComp.ShipMapState = ShipMapState.nominal;
+							targetMapComp.ShipMapState = ShipMapState.nominal;
 							OriginMapComp.GraveComp.LastAttackTick = Find.TickManager.TicksGame;
 							OriginMapComp.GraveComp.NextTargetMap = OriginMapComp.ShipCombatTargetMap;
 						}
@@ -2583,13 +2587,16 @@ namespace SaveOurShip2
 				else //enemy shuttles - never returns?
 				{
 					IntVec3 vec = IntVec3.Zero;
-					foreach (var bay in mapToSpawnInComp.Bays)
+					if (mapToSpawnInComp != originMapComp) //Don't land in player shuttle bays, it's rude
 					{
-						vec = bay.CanFitShuttleSize(mission.shuttle);
-						if (vec != IntVec3.Zero)
+						foreach (var bay in mapToSpawnInComp.Bays)
 						{
-							bay.ReserveArea(vec, mission.shuttle);
-							break;
+							vec = bay.CanFitShuttleSize(mission.shuttle);
+							if (vec != IntVec3.Zero)
+							{
+								bay.ReserveArea(vec, mission.shuttle);
+								break;
+							}
 						}
 					}
 
@@ -2614,10 +2621,14 @@ namespace SaveOurShip2
 							{
 								IntVec3 v = ship.OuterCells().RandomElement();
 								vec = FindTargetForPod(mission, v);
-								if (vec != null)
+								if (vec != IntVec3.Invalid)
 									break;
 								i++;
 							}
+						}
+						if(vec==IntVec3.Invalid)
+                        {
+							CellFinder.TryFindRandomCell(map, (IntVec3 cell) => { return !map.roofGrid.Roofed(cell); }, out vec);
 						}
 					}
 
@@ -2684,9 +2695,8 @@ namespace SaveOurShip2
 			{
 				var result = IntVec3.Invalid;
 				CellFinder.TryFindRandomCellNear(v, map, 9, (IntVec3 cell) => { return cell.Standable(map) && !map.roofGrid.Roofed(cell); }, out result);
-				if (result == IntVec3.Invalid)
-					return v; //Fallback, hope this won't have to be used
-				return result;
+				if (result != IntVec3.Invalid)
+					return result;
 			}
 			else //Restricted boarding fallback, pods punch holes in player ship
 			{
@@ -2702,7 +2712,7 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			return IntVec3.Zero;
+			return IntVec3.Invalid;
 		}
 		public bool AnyBridgeIn(Room room)
 		{

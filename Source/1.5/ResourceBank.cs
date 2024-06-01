@@ -187,6 +187,7 @@ namespace SaveOurShip2
 			public static JobDef BreachAirlock;
 			public static JobDef DefendBreacher;
 			public static JobDef ManShipBridge;
+			public static JobDef LoadTorpedoTube;
 		}
 
 		[DefOf]

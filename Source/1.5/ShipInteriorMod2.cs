@@ -130,7 +130,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.0";
+		public const string SOS2version = "SteamV2.7.1";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
@@ -2342,14 +2342,14 @@ namespace SaveOurShip2
 					if (engine.PodFueled)
 					{
 						fuelStored += engine.refuelComp.Fuel;
-						if (ModsConfig.BiotechActive && !sourceMapIsSpace)
+						/*if (ModsConfig.BiotechActive && !sourceMapIsSpace)
 						{
 							foreach (IntVec3 v in engine.ExhaustArea)
 							{
 								if (Rand.Chance(0.8f))
 									v.Pollute(sourceMap, true);
 							}
-						}
+						}*/
 					}
 					engines.Add(engine);
 				}
@@ -2378,7 +2378,7 @@ namespace SaveOurShip2
 				foreach (CompEngineTrail engine in engines)
 				{
 					engine.refuelComp.ConsumeFuel(fuelNeeded * engine.refuelComp.Fuel / fuelStored);
-					if (targetMapIsSpace)
+					if (targetMapIsSpace && !sourceMapIsSpace)
 					{
 						if (engine.parent.Rotation.AsByte == 0)
 							fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, -3));

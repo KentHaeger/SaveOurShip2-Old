@@ -471,9 +471,9 @@ namespace SaveOurShip2
 		public override string CompInspectStringExtra()
 		{
 			if (Consciousness != null)
-				return "Consciousness: " + Consciousness.Name.ToStringShort;
+				return "SoSConsciousness".Translate(Consciousness.Name.ToStringShort);
 			else if (!Props.canMergeAI && !Props.canMergeHuman)
-				return "AI name: " + AIName.Trim();
+				return "SoSAIName".Translate(AIName.Trim());
 			else
 				return base.CompInspectStringExtra();
 		}

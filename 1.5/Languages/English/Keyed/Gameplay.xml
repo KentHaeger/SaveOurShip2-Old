@@ -395,7 +395,7 @@
 	<SoSMustDesignateWreckage>Must designate wrecked starship hull</SoSMustDesignateWreckage>
 	<SoS.UnDockWarning>Warning: Moving a ship while docked will release all docking clamps.</SoS.UnDockWarning>
 	<SoS.ExpelSuperheatedAir>Expel superheated air</SoS.ExpelSuperheatedAir>
-	<SoS.ExpelSuperheatedAirDesc>Use this vent to expel superheated air from the room. The process will damage your ship's life-support system(s) for one point per tile in the room, split evenly.\n\nAny non-EVA-capable pawns in the room will suffer explosive decompression!</SoS.ExpelSuperheatedAirDesc>
+	<SoS.ExpelSuperheatedAirDesc>Use this vent to expel superheated air from the room. The process will damage your ship's life-support system(s) based on the size of the room, split evenly between systems (currently {0} each).\n\nAny non-EVA-capable pawns in the room will suffer explosive decompression!</SoS.ExpelSuperheatedAirDesc>
 	<SoS.AirNotSuperheated>Air is not superheated</SoS.AirNotSuperheated>
 	<SoS.NoLifeSupport>No active life support</SoS.NoLifeSupport>
 	<SoS.BreakCloakAtHeat>Break cloak at depletion level</SoS.BreakCloakAtHeat>
@@ -403,6 +403,34 @@
 	<SoS.CloakBrokenAtHeat>Cloaking devices deactivated due to coolant depletion!</SoS.CloakBrokenAtHeat>
 	<SoS.NotEnoughFuelToLaunchShuttle>Not enough fuel to launch shuttle</SoS.NotEnoughFuelToLaunchShuttle>
 	<SoS.CannotLaunchUnderRoof>Shuttle is under a roof and is not on a shuttle bay</SoS.CannotLaunchUnderRoof>
+	<SoSBreachAirlock>Breach airlock</SoSBreachAirlock>
+	<SoSHackAirlock>Hack airlock</SoSHackAirlock>
+	<SoSAttackShip>Attack {0}</SoSAttackShip>
+	<SoSAttackShipDesc>Begin ship combat against the {0}.</SoSAttackShipDesc>
+	<SoSPirateShip>Pirate {0}</SoSPirateShip>
+	<SoSPirateShipDesc>Attempt an act of space piracy against {0}. This will begin ship combat and raise your ship's notoriety!</SoSPirateShipDesc>
+	<SoSInvestigateDerelict>Investigate {0}</SoSInvestigateDerelict>
+	<SoSInvestigateDerelictDesc>Move in to investigate the {0}. You will be able to launch shuttles to the derelict, and once it has been cleared of hostiles (if any) you may salvage it.</SoSInvestigateDerelictDesc>
+	<SoSHackFailed>Failed to hack the enemy bridge!</SoSHackFailed>
+	<SoSHackBridge>Hack bridge</SoSHackBridge>
+	<SoSCantPlaceCocoon>Unable to place cryptosleep cocoon!</SoSCantPlaceCocoon>
+	<SoSAlreadyMalnourished>User is already malnourished</SoSAlreadyMalnourished>
+	<SoSToggleShield>Toggle shield</SoSToggleShield>
+	<SoSToggleShieldDesc>Toggle this shield on or off</SoSToggleShieldDesc>
+	<SoSCantVentCloaked>Cannot vent: Cloaked</SoSCantVentCloaked>
+	<SoSMoreShuttles> more shuttles</SoSMoreShuttles>
+	<SoSCombatEnergy>Energy: </SoSCombatEnergy>
+	<SoSCombatNoEnergy>Energy: N/A</SoSCombatNoEnergy>
+	<SoSCombatHeat>Heat: </SoSCombatHeat>
+	<SoSCombatNoHeat>Heat: N/A</SoSCombatNoHeat>
+	<SoSCombatHull>Hull: </SoSCombatHull>
+	<SoSCombatShields>Shields: </SoSCombatShields>
+	<SoSCombatNone>N/A</SoSCombatNone>
+	<SoSCantSettleSpaceSites>Cannot settle space sites</SoSCantSettleSpaceSites>
+	<SoSNoPowerSupply>Ship has no internal power supply</SoSNoPowerSupply>
+	<SoSCarryToCryptonest>Carry to cryptonest</SoSCarryToCryptonest>
+	<SoSConsciousness>Consciousness: {0}</SoSConsciousness>
+	<SoSAIName>AI name: {0}</SoSAIName>
 	
 	<!-- obsolete/unused
 	<SoS.PirateTradeEmpire>Our act of piracy against the Empire has not gone unnoticed!</SoS.PirateTradeEmpire>

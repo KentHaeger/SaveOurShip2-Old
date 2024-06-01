@@ -1257,7 +1257,7 @@
 			<Flammability>0</Flammability>
 		</statBases>
 		<tickerType>Normal</tickerType>
-		<description>An advanced reactionless engine capable of interplanetary and interstellar travel.\n\nCannot be used inside a planet's atmosphere. This larger version usually found on big warships using two manifolds in a more efficient configuration.\n\nJT mass limit: 30000\nThrust: 2000</description>
+		<description>An advanced reactionless engine capable of interplanetary and interstellar travel.\n\nCannot be used inside a planet's atmosphere. This larger version, usually found on big warships, utilizes two manifolds in a more efficient configuration.\n\nJT mass limit: 30000\nThrust: 2000</description>
 		<size>(5,5)</size>
 		<receivesSignals>true</receivesSignals>
 		<designationCategory>Ship</designationCategory>
@@ -1365,6 +1365,7 @@
 		<researchPrerequisites>
 			<li>ShipPilotSeat</li>
 		</researchPrerequisites>
+		<interactionCellIcon>DiningChair</interactionCellIcon>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ShipConsoleTactical</defName>
@@ -1430,6 +1431,7 @@
 		<researchPrerequisites>
 			<li>ShipPilotSeat</li>
 		</researchPrerequisites>
+		<interactionCellIcon>DiningChair</interactionCellIcon>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ShipConsoleScience</defName>
@@ -1495,6 +1497,7 @@
 		<researchPrerequisites>
 			<li>ShipPilotSeat</li>
 		</researchPrerequisites>
+		<interactionCellIcon>DiningChair</interactionCellIcon>
 	</ThingDef>
 	<!-- core -->
 	<DesignatorDropdownGroupDef>

@@ -165,7 +165,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < playerMapComp.ShuttleMissions.Count)
             {
 				baseY += 30;
-				string str = "(" + (playerMapComp.ShuttleMissions.Count - shuttlesToDisplay) + " more shuttles)";
+				string str = "(" + (playerMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate()+")";
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -228,7 +228,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < enemyMapComp.ShuttleMissions.Count)
 			{
 				baseY += 30;
-				string str = "(" + (enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay) + " more shuttles)";
+				string str = "(" + (enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate() + ")";
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf + 785, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -350,9 +350,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect, "Energy: " + bridge.power + " / " + bridge.powerCap);
+				Widgets.Label(rect,  + bridge.power + " / " + bridge.powerCap);
 			else
-				Widgets.Label(rect, "<color=red>Energy: N/A</color>");
+				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
 		}
 		private static void DrawHeat(float offset, float baseY, Building_ShipBridge bridge)
 		{
@@ -362,9 +362,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "Heat: " + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
+				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
 			else
-				Widgets.Label(rect, "<color=red>Heat: N/A</color>");
+				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
 		}
 		private static void DrawShuttleHealth(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -373,7 +373,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "Hull: " + Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f) + "%");
+			Widgets.Label(rect, "SoSCombatHull".Translate() + Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f) + "%");
 		}
 		private static void DrawShuttleHeat(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -390,7 +390,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "Shields: " + (heatMax == 0 ? "N/A" : (Mathf.Round((1f - heatCurrent / heatMax) * 100f) + "%")));
+			Widgets.Label(rect, "SoSCombatShields".Translate() + (heatMax == 0 ? "SoSCombatNone".Translate().ToString() : (Mathf.Round((1f - heatCurrent / heatMax) * 100f) + "%")));
 		}
 		public static Rect FillableBarWithDepletion(Rect rect, float fillPercent, float fillDepletion, Texture2D fillTex, Texture2D depletionTex)
 		{
@@ -1219,7 +1219,7 @@ namespace SaveOurShip2
 			if (map.IsSpace())
 			{
 				__result.disabled = true;
-				__result.disabledReason = "Cannot settle space sites";
+				__result.disabledReason = "SoSCantSettleSpaceSites".Translate();
 			}
 		}
 	}
@@ -1629,7 +1629,7 @@ namespace SaveOurShip2
 				diaOption.resolveTree = true;
 				diaNode.options.Add(diaOption);
 
-				if (skill * 2 < bounty)
+				if (bounty >= 40)
 				{
 					diaOption.Disable(TranslatorFormattedStringExtensions.Translate("SoS.TradeTradeDecline", __instance.TraderName));
 				}
@@ -1780,6 +1780,8 @@ namespace SaveOurShip2
 				newResult.Add(TranslatorFormattedStringExtensions.Translate("ShipReportMissingPart") + ": " + ThingDefOf.Ship_SensorCluster.label);
 			if (!ship.HasMannedBridge())
 				newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.ReportNeedPilot"));
+			if (!ship.Powered())
+				newResult.Add("SoSNoPowerSupply".Translate());
 			//do not allow kidnapping other fac pawns/animals
 			foreach (Pawn p in ship.PawnsOnShip())
 			{
@@ -2622,7 +2624,7 @@ namespace SaveOurShip2
 						pawn.CanReserveAndReach(current, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, true) &&
 						findCryptonestFor(current, pawn, true) != null)
 					{
-						string text2 = "Carry to cryptonest";
+						string text2 = "SoSCarryToCryptonest";
 						JobDef jDef = DefDatabase<JobDef>.GetNamed("CarryToCryptonest");
 						Action action2 = delegate {
 							Building_CryptosleepCasket building_CryptosleepCasket =
@@ -2873,7 +2875,7 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(Pawn generated, Pawn other)
 		{
-			if (!generated.RaceProps.Humanlike || !other.RaceProps.Humanlike || generated.kindDef.defName.Contains("Space") || other.kindDef.defName.Contains("Space"))
+			if (!generated.RaceProps.Humanlike || !other.RaceProps.Humanlike || generated.kindDef.defName.Contains("Space") || other.kindDef.defName.Contains("Space") || generated.story.Childhood == ResourceBank.BackstoryDefOf.SoSHologram || other.story.Childhood == ResourceBank.BackstoryDefOf.SoSHologram)
 			{
 				return false;
 			}
@@ -5061,6 +5063,7 @@ namespace SaveOurShip2
 		}
     }
 
+	//TODO KENT - re-disable the below once VF updates
 	[HarmonyPatch(typeof(VehiclePawn), "GetFloatMenuOptions")]
 	public static class TEMPFixVFPawnBoarding
     {
@@ -5119,7 +5122,6 @@ namespace SaveOurShip2
 						Job job = JobMaker.MakeJob(__instance.JobDef, thing, t);
 						job.count = jobCount;
 						__result = job;
-						Log.Message("Found some stuff to shove in a shuttle hole: " + jobCount + " of " + thing);
 						return;
 					}
 				}

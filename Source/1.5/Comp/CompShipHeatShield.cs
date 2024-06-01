@@ -304,8 +304,8 @@ namespace SaveOurShip2
 						vehicleWantsShutDown = !vehicleWantsShutDown;
 					},
 					isActive = delegate () { return !vehicleWantsShutDown; },
-					defaultLabel = "Toggle shield",
-					defaultDesc = "Turn this shield on or off",
+					defaultLabel = "SoSToggleShield".Translate(),
+					defaultDesc = "SoSToggleShieldDesc".Translate(),
 					icon = ContentFinder<Texture2D>.Get("UI/Shield_On")
 				};
             }

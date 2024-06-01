@@ -1357,5 +1357,10 @@ namespace SaveOurShip2
 			}
 			ShipInteriorMod2.MoveShipFlag = false;
 		}
+
+		public bool Powered()
+        {
+			return Core != null && !IsWreck && (Core.PowerComp.PowerNet.HasActivePowerSource || Core.PowerComp.PowerNet.CurrentStoredEnergy() >= 1000);
+        }
 	}
 }

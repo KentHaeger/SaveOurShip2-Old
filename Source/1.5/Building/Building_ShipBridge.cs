@@ -874,8 +874,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Pirate"),
-										defaultLabel = "Attack " + passingShip.FullTitle,
-										defaultDesc = "Attack the " + passingShip.FullTitle
+										defaultLabel = "SoSAttackShip".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSAttackShipDesc".Translate(passingShip.FullTitle)
 									};
 									yield return attackPirateShip;
 								}
@@ -889,8 +889,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Trader"),
-										defaultLabel = "Attack " + passingShip.FullTitle,
-										defaultDesc = "Attempt an act of space piracy against " + passingShip.FullTitle
+										defaultLabel = "SoSPirateShip".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSPirateShipDesc".Translate(passingShip.FullTitle)
 									};
 									yield return attackTradeShip;
 								}
@@ -904,8 +904,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Pirate"),
-										defaultLabel = "Attack " + passingShip.FullTitle,
-										defaultDesc = "Attempt to engage " + passingShip.FullTitle
+										defaultLabel = "SoSAttackShip".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSAttackShipDesc".Translate(passingShip.FullTitle)
 									};
 									yield return attackAttackableShip;
 								}
@@ -919,8 +919,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Quest"),
-										defaultLabel = "Approach " + passingShip.FullTitle,
-										defaultDesc = "Approach to investigate " + passingShip.FullTitle
+										defaultLabel = "SoSInvestigateDerelict".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSInvestigateDerelictDesc".Translate(passingShip.FullTitle)
 									};
 									yield return approachDerelictShip;
 								}
@@ -1197,18 +1197,18 @@ namespace SaveOurShip2
 		private void Failure(Pawn pawn)
 		{
 			if (pawn.Faction == Faction.OfPlayer)
-				Messages.Message("Hack failed", null, MessageTypeDefOf.CautionInput);
+				Messages.Message("SoSHackFailed".Translate(), null, MessageTypeDefOf.CautionInput);
 		}
 		private void CriticalFailure(Pawn pawn)
 		{
 			if (pawn.Faction == Faction.OfPlayer)
-				Messages.Message("Hack failed", null, MessageTypeDefOf.CautionInput);
+				Messages.Message("SoSHackFailed".Translate(), null, MessageTypeDefOf.CautionInput);
 		}
 		public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
 		{
 			List<FloatMenuOption> options = new List<FloatMenuOption>();
 			if (Faction != Faction.OfPlayer)
-				options.Add(new FloatMenuOption("Hack", delegate { Job capture = new Job(ResourceBank.JobDefOf.HackEnemyShip, this); selPawn.jobs.TryTakeOrderedJob(capture); }));
+				options.Add(new FloatMenuOption("SoSHackBridge".Translate(), delegate { Job capture = new Job(ResourceBank.JobDefOf.HackEnemyShip, this); selPawn.jobs.TryTakeOrderedJob(capture); }));
 			else if (AllComps != null)
 			{
 				for (int i = 0; i < AllComps.Count; i++)
