@@ -2132,6 +2132,21 @@ namespace SaveOurShip2
 			{
 				z.Delete();
 			}*/
+			IEnumerable<CompEngineTrail> engines = ship.Engines.Where(e => e.flickComp.SwitchIsOn && !e.Props.energy && !e.Props.reactionless && e.refuelComp.Fuel > 0 && (!targetMapIsSpace || e.Props.takeOff));
+			foreach (CompEngineTrail engine in engines)
+			{
+				if (targetMapIsSpace && !sourceMapIsSpace)
+				{
+					if (engine.parent.Rotation.AsByte == 0)
+						fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, -3));
+					else if (engine.parent.Rotation.AsByte == 1)
+						fireExplosions.Add(engine.parent.Position + new IntVec3(-3, 0, 0));
+					else if (engine.parent.Rotation.AsByte == 2)
+						fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, 3));
+					else
+						fireExplosions.Add(engine.parent.Position + new IntVec3(3, 0, 0));
+				}
+			}
 			if (!targetMapIsSpace)
 			{
 				foreach (IntVec3 pos in targetArea) //check since placeworker ignores this
@@ -2335,8 +2350,7 @@ namespace SaveOurShip2
 			{
 				float fuelNeeded = ship.MassActual;
 				float fuelStored = 0f;
-				List<CompEngineTrail> engines = new List<CompEngineTrail>();
-				foreach (CompEngineTrail engine in ship.Engines.Where(e => e.flickComp.SwitchIsOn && !e.Props.energy && !e.Props.reactionless && e.refuelComp.Fuel > 0 && (!targetMapIsSpace || e.Props.takeOff)))
+				foreach (CompEngineTrail engine in engines)
 				{
 					fuelStored += engine.refuelComp.Fuel;
 					if (engine.PodFueled)
@@ -2351,7 +2365,6 @@ namespace SaveOurShip2
 							}
 						}*/
 					}
-					engines.Add(engine);
 				}
 				if (sourceMapIsSpace)
 				{
@@ -2375,21 +2388,8 @@ namespace SaveOurShip2
 				{
 					fuelNeeded *= pctFuelSpace;
 				}
-				foreach (CompEngineTrail engine in engines)
-				{
+				foreach(CompEngineTrail engine in engines)
 					engine.refuelComp.ConsumeFuel(fuelNeeded * engine.refuelComp.Fuel / fuelStored);
-					if (targetMapIsSpace && !sourceMapIsSpace)
-					{
-						if (engine.parent.Rotation.AsByte == 0)
-							fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, -3));
-						else if (engine.parent.Rotation.AsByte == 1)
-							fireExplosions.Add(engine.parent.Position + new IntVec3(-3, 0, 0));
-						else if (engine.parent.Rotation.AsByte == 2)
-							fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, 3));
-						else
-							fireExplosions.Add(engine.parent.Position + new IntVec3(3, 0, 0));
-					}
-				}
 				if (devMode)
 					watch.Record("takeoffEffects");
 			}
