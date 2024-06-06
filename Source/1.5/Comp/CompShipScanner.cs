@@ -156,19 +156,36 @@ namespace SaveOurShip2
 					Find.LetterStack.ReceiveLetter(quest.name, quest.description, LetterDefOf.PositiveEvent, null, null, quest, null, null);
 				}
 			}
-			else if (chance > 3 && chance < 7) //tradeship, already has faction, navy resolves in SpawnEnemyShip
+			else if (chance > 2 && chance < 7) //ship wreck
 			{
-				IncidentParms parms = new IncidentParms();
-				parms.target = parent.Map;
-				parms.forced = true;
-				bool tradeShip = Find.Storyteller.TryFire(new FiringIncident(IncidentDefOf.OrbitalTraderArrival, null, parms));
-				if (tradeShip)
+				DerelictShip ship = new DerelictShip();
+				int rarity = Rand.RangeInclusive(1, 2);
+				if (chance == 6)
+					ship.wreckLevel = 2;
+				else
+					ship.wreckLevel = 3;
+				if (Rand.Chance((float)SaveOurShip2.ModSettings_SoS.navyShipChance))
 				{
-					if (worker != null)
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", worker), LetterDefOf.PositiveEvent);
-					else
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", "its AI"), LetterDefOf.PositiveEvent);
+					NavyDef navy = ShipInteriorMod2.ValidRandomNavy(Faction.OfPlayer);
+					if (navy != null)
+					{
+						ship.spaceNavyDef = navy;
+						ship.derelictShip = navy.spaceShipDefs.Where(def => !def.neverRandom && !def.spaceSite && !def.neverWreck && def.rarityLevel <= rarity).RandomElement();
+						ship.shipFaction = Find.FactionManager.AllFactions.Where(f => navy.factionDefs.Contains(f.def)).RandomElement();
+					}
 				}
+				if (ship.derelictShip == null)
+				{
+					ship.derelictShip = DefDatabase<ShipDef>.AllDefs.Where(def => !def.neverRandom && !def.spaceSite && !def.neverWreck && def.rarityLevel <= rarity && !def.navyExclusive).RandomElement();
+					ship.shipFaction = Faction.OfAncientsHostile;
+				}
+
+				Log.Message("SOS2: ".Colorize(Color.cyan) + "Found ship with def: " + ship.derelictShip + " fac: " + ship.shipFaction + " navy: " + ship.spaceNavyDef);
+				parent.Map.passingShipManager.AddShip(ship);
+				if (worker != null)
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip), LetterDefOf.PositiveEvent);
+				else
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else if (chance == 7) //premade sites, very low chance
 			{
@@ -200,36 +217,19 @@ namespace SaveOurShip2
 				else
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
-			else if (chance > 7 && chance < 12) //ship wreck
+			else if (chance > 7 && chance < 11) //tradeship, already has faction, navy resolves in SpawnEnemyShip
 			{
-				DerelictShip ship = new DerelictShip();
-				int rarity = Rand.RangeInclusive(1, 2);
-				if (chance == 11)
-					ship.wreckLevel = 2;
-				else
-					ship.wreckLevel = 3;
-				if (Rand.Chance((float)SaveOurShip2.ModSettings_SoS.navyShipChance))
+				IncidentParms parms = new IncidentParms();
+				parms.target = parent.Map;
+				parms.forced = true;
+				bool tradeShip = Find.Storyteller.TryFire(new FiringIncident(IncidentDefOf.OrbitalTraderArrival, null, parms));
+				if (tradeShip)
 				{
-					NavyDef navy = ShipInteriorMod2.ValidRandomNavy(Faction.OfPlayer);
-					if (navy != null)
-					{
-						ship.spaceNavyDef = navy;
-						ship.derelictShip = navy.spaceShipDefs.Where(def => !def.neverRandom && !def.spaceSite && !def.neverWreck && def.rarityLevel <= rarity).RandomElement();
-						ship.shipFaction = Find.FactionManager.AllFactions.Where(f => navy.factionDefs.Contains(f.def)).RandomElement();
-					}
+					if (worker != null)
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", worker), LetterDefOf.PositiveEvent);
+					else
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", "its AI"), LetterDefOf.PositiveEvent);
 				}
-				if (ship.derelictShip == null)
-				{
-					ship.derelictShip = DefDatabase<ShipDef>.AllDefs.Where(def => !def.neverRandom && !def.spaceSite && !def.neverWreck && def.rarityLevel <= rarity && !def.navyExclusive).RandomElement();
-					ship.shipFaction = Faction.OfAncientsHostile;
-				}
-
-				Log.Message("SOS2: ".Colorize(Color.cyan) + "Found ship with def: " + ship.derelictShip + " fac: " + ship.shipFaction + " navy: " + ship.spaceNavyDef);
-				parent.Map.passingShipManager.AddShip(ship);
-				if (worker != null)
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip), LetterDefOf.PositiveEvent);
-				else
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else //random ship
 			{
