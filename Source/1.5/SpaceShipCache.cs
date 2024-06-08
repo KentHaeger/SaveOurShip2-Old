@@ -474,7 +474,7 @@ namespace SaveOurShip2
 			fakeMover.targetMap = targetMap;
 			fakeMover.atmospheric = atmospheric;
 			fakeMover.fuelPaidByTarget = fuelPaidByTarget;
-			fakeMover.Position = fakeMover.shipRoot.Position;
+			fakeMover.Position = targetMap.Center;
 			fakeMover.SpawnSetup(targetMap, false);
 			List<object> selected = new List<object>();
 			foreach (object ob in Find.Selector.SelectedObjects)

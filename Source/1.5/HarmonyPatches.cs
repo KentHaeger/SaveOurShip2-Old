@@ -1785,7 +1785,7 @@ namespace SaveOurShip2
 			//do not allow kidnapping other fac pawns/animals
 			foreach (Pawn p in ship.PawnsOnShip())
 			{
-				if (p.Faction != Faction.OfPlayer && !p.IsPrisoner)
+				if (p.Faction != Faction.OfPlayer && !p.IsPrisoner && !p.InContainerEnclosed)
 				{
 					newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.LaunchFailPawns", p.Name?.ToStringShort ?? p.KindLabel ?? ""));
 				}
@@ -5010,208 +5010,42 @@ namespace SaveOurShip2
         }
 	}
 
-	[HarmonyPatch(typeof(WorkGiver_BuildRoof), "ShouldSkip")]
-	public static class NoRoofsInSpace
-    {
-		public static void Postfix(ref bool __result, Pawn pawn)
-        {
-			if(pawn.Map.IsSpace())
-            {
-				__result = true;
-            }
-        }
-    }
-
 	[HarmonyPatch(typeof(AutoBuildRoofAreaSetter), "TryGenerateAreaNow", new Type[] { typeof(Room) })]
 	public static class NoRoofInSpace
 	{
-		private static bool Prefix(Room room)
+		public static bool Prefix(Room room)
 		{
 			return !room.Map.IsSpace();
 		}
 	}
 
-	//TEMPORARY until I talk to Phil and see how to fix this properly
-	[HarmonyPatch(typeof(CompUpgradeTree), "CompTickRare")]
-	public static class TEMPStopRedErrorOnTakeoff
+	[HarmonyPatch(typeof(DateNotifier), "AnyPlayerHomeSeasonsAreMeaningful")]
+	public static class NoSeasonSpam
     {
-		public static bool Prefix(CompUpgradeTree __instance)
+		public static void Postfix(ref bool __result)
         {
-			return __instance.parent.Map != null;
+			if (Find.Maps.Any(map => map.IsSpace()))
+				__result = false;
         }
     }
 
-	[HarmonyPatch(typeof(GenGridVehicles), "Walkable")]
-	public static class TEMPFixShuttleSpawnFail
-    {
-		public static bool Prefix()
-        {
-			return false;
-        }
-
-		public static void Postfix(IntVec3 cell, VehicleDef vehicleDef, Map map, ref bool __result)
-        {
-			try
-			{
-				__result = ComponentCache.GetCachedMapComponent<VehicleMapping>(map)[vehicleDef].VehiclePathGrid.Walkable(cell);
-			}
-			catch (Exception e)
-            {
-				Log.Error("[SoS2] Temporary patch prevented shuttle spawn from failing. Exception was: " + e);
-				__result = true;
-            }
-		}
-    }
-
-	//TODO KENT - re-disable the below once VF updates
-	[HarmonyPatch(typeof(VehiclePawn), "GetFloatMenuOptions")]
-	public static class TEMPFixVFPawnBoarding
-    {
-		public static void Postfix(Pawn selPawn, VehiclePawn __instance, ref IEnumerable<FloatMenuOption> __result)
-        {
-			if(selPawn.Faction != __instance.Faction)
-				__result=new List<FloatMenuOption>();
-        }
-    }
-
-	[HarmonyPatch(typeof(PawnUtility), "IsTravelingInTransportPodWorldObject")]
-	public static class TEMPFixVFPrisonerFactionRandomize //Temporary until this fix is integrated into VF
-    {
-		public static void Postfix(Pawn pawn, ref bool __result)
-        {
-			if (ThingOwnerUtility.AnyParentIs<VehiclePawn>(pawn) || ThingOwnerUtility.AnyParentIs<AerialVehicleInFlight>(pawn))
-				__result = true;
-        }
-    }
-
-	[HarmonyPatch(typeof(WorkGiver_BringUpgradeMaterial), "JobOnThing")]
-	public static class TEMPFixVFUpgradeCount //Fix the upgrade bug, since Phil hasn't had time to
-	{
-		public static bool Prefix()
-        {
-			return false;
-        }
-
-		public static void Postfix(WorkGiver_BringUpgradeMaterial __instance, Pawn pawn, Thing t, ref Job __result, bool forced=false)
-        {
-			VehiclePawn vehicle = t as VehiclePawn;
-			if (vehicle == null)
-			{
-				__result = null;
-				return;
-			}
-			if (pawn.Faction != t.Faction)
-			{
-				__result = null;
-				return;
-			}
-			if (!__instance.JobAvailable(vehicle))
-			{
-				__result = null;
-				return;
-			}
-			if (__instance.ThingDefs(vehicle).NotNullAndAny() && ReachabilityUtility.CanReach(pawn, new LocalTargetInfo(t.Position), (PathEndMode)2, (Danger)3, false, false, (TraverseMode)0))
-			{
-				Thing thing = __instance.FindThingToPack(vehicle, pawn);
-				if (thing != null)
-				{
-					int countLeft = __instance.CountLeftToPack(vehicle, pawn, new ThingDefCount(thing.def, vehicle.compUpgradeTree.upgrade.node.MaterialsRequired(vehicle).FirstOrDefault(thingDefClassCount => thingDefClassCount.thingDef == thing.def).count));
-					int jobCount = Mathf.Min(thing.stackCount, countLeft);
-					if (jobCount > 0)
-					{
-						Job job = JobMaker.MakeJob(__instance.JobDef, thing, t);
-						job.count = jobCount;
-						__result = job;
-						return;
-					}
-				}
-			}
-			__result = null;
-		}
-	}
-
-	[HarmonyPatch(typeof(WorkGiver_BringUpgradeMaterial), "FindThingToPack")]
-	public static class TEMPFixVFUpgradeCount2 //Fix the upgrade bug, since Phil hasn't had time to
-    {
-		public static bool Prefix()
-        {
-			return false;
-        }
-
-		public static void Postfix(WorkGiver_BringUpgradeMaterial __instance, VehiclePawn vehicle, Pawn pawn, ref Thing __result)
-        {
-			Thing result = null;
-			IEnumerable<ThingDefCountClass> thingDefs = vehicle.compUpgradeTree.upgrade.node.MaterialsRequired(vehicle);
-			if (thingDefs.NotNullAndAny())
-			{
-				foreach (ThingDefCount item in thingDefs)
-				{
-					ThingDefCount thingDefCount = item;
-					int countLeftToTransfer = __instance.CountLeftToPack(vehicle, pawn, thingDefCount);
-					if (countLeftToTransfer > 0)
-					{
-						WorkGiver_BringUpgradeMaterial.neededThingDefs.Add(thingDefCount.thingDef);
-					}
-				}
-				if (!GenCollection.Any<ThingDef>(WorkGiver_BringUpgradeMaterial.neededThingDefs))
-				{
-					__result = null;
-					return;
-				}
-				result = __instance.ClosestHaulable(pawn, (ThingRequestGroup)12, ValidThingDef);
-				if (result == null)
-				{
-					result = __instance.ClosestHaulable(pawn, (ThingRequestGroup)3, ValidThingDef);
-				}
-				WorkGiver_BringUpgradeMaterial.neededThingDefs.Clear();
-			}
-			__result = result; 
-			bool ValidThingDef(Thing thing)
-			{
-				return WorkGiver_BringUpgradeMaterial.neededThingDefs.Contains(thing.def) && ReservationUtility.CanReserve(pawn, thing, 1, -1, (ReservationLayerDef)null, false) && !ForbidUtility.IsForbidden(thing, pawn.Faction);
-			}
-		}
-    }
-
-	[HarmonyPatch(typeof(VehicleStatHandler), "SubtractUpgradeableStatValue")]
-	public static class TEMPFixVFUpgradeStats //Fix a bug that's almost as boneheaded as mine!
-    {
-		public static bool Prefix()
-        {
-			return false;
-        }
-
-		public static void Postfix(StatDef statDef, float value, VehiclePawn ___vehicle, Dictionary<StatDef, StatOffset> ___baseStatOffsets)
-        {
-			if (!___baseStatOffsets.TryGetValue(statDef, out StatOffset statOffset))
-			{
-				___baseStatOffsets[statDef] = new StatOffset(___vehicle, statDef);
-				statOffset = ___baseStatOffsets[statDef];
-			}
-			statOffset.Offset -= value;
-		}
-    }
-
-	/*causes lag
 	[HarmonyPatch(typeof(ShipLandingBeaconUtility), "GetLandingZones")]
 	public static class RoyaltyShuttlesLandOnBays
 	{
 		public static void Postfix(Map map, ref List<ShipLandingArea> __result)
 		{
-			foreach (Building landingSpot in map.listerBuildings.AllBuildingsColonistOfDef(ResourceBank.ThingDefOf.ShipShuttleBay))
-			{
-				ShipLandingArea area = new ShipLandingArea(landingSpot.OccupiedRect(), map);
-				area.RecalculateBlockingThing();
-				__result.Add(area);
-			}
-			foreach (Building landingSpot in map.listerBuildings.AllBuildingsColonistOfDef(ResourceBank.ThingDefOf.ShipShuttleBayLarge))
-			{
-				ShipLandingArea area = new ShipLandingArea(landingSpot.OccupiedRect(), map);
-				area.RecalculateBlockingThing();
-				__result.Add(area);
-			}
+			foreach (SpaceShipCache ship in map.GetComponent<ShipMapComp>().ShipsOnMap.Values)
+            {
+				foreach (CompShipBay bay in ship.Bays)
+                {
+					ShipLandingArea area = new ShipLandingArea(bay.parent.OccupiedRect(), map);
+					area.RecalculateBlockingThing();
+					__result.Add(area);
+				}
+            }
 		}
-	}*/
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)

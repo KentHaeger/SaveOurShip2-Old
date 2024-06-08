@@ -37,9 +37,9 @@
 	<SoS.CombatPodDestroyedPlayer>Your shuttle was destroyed by enemy point defense! If any crew survived, their ejector seats will take them back to your ship.</SoS.CombatPodDestroyedPlayer>
 	<SoS.CombatPodDestroyedEnemy>Enemy shuttle was destroyed by your point defense!</SoS.CombatPodDestroyedEnemy>
 	<SoS.WithdrawShip>Withdraw ship</SoS.WithdrawShip>
-	<SoS.WithdrawShipDesc>Withdraw this ship from the battle</SoS.WithdrawShipDesc>
+	<SoS.WithdrawShipDesc>Withdraw this ship from the battle.</SoS.WithdrawShipDesc>
 	<SoS.WithdrawShipLast>Last ship can not withdraw</SoS.WithdrawShipLast>
-	<SoS.CombatConfirmWithdraw>Withdraw this ship to the graveyard? If you lose or flee, the enemy ship will attack your graveyard.</SoS.CombatConfirmWithdraw>
+	<SoS.CombatConfirmWithdraw>Withdraw this ship to the graveyard? If you lose or flee, the enemy ship will attack your graveyard. Please note that the withdrawal will not take effect until the game is unpaused.</SoS.CombatConfirmWithdraw>
 	<SoS.WrecksPreventMove>Cannot move with wrecks on map!</SoS.WrecksPreventMove>
 	<SoS.RemoveWrecks>Remove wrecks</SoS.RemoveWrecks>
 	<SoS.RemoveWrecksDesc>Remove all wrecks from your map, they will be destroyed.</SoS.RemoveWrecksDesc>

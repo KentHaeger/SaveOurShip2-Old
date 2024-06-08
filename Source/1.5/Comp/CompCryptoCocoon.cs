@@ -27,7 +27,11 @@ namespace SaveOurShip2
                     cocoon.TryAcceptThing(parent.pawn);
                 cocoon.innerContainer.TryAdd(parent.pawn);
                 cocoon.contentsKnown = true;
-                parent.pawn.health.AddHediff(HediffDefOf.Malnutrition);
+                if (parent.pawn.needs.food != null)
+                {
+                    parent.pawn.health.AddHediff(HediffDefOf.Malnutrition).Severity = 0.5f - (0.25f * parent.pawn.needs.food.CurLevel);
+                    parent.pawn.needs.food.CurLevel = 0.1f;
+                }
             }
             else
                 Messages.Message("SoSCantPlaceCocoon".Translate(), target.Thing, MessageTypeDefOf.CautionInput);

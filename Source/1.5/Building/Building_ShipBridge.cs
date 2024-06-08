@@ -303,7 +303,7 @@ namespace SaveOurShip2
 				List<int> shipStuck = new List<int>();
 				if (mapComp.ShipsOnMap.Count > 1)
 				{
-					shipStuck = mapComp.ShipsOnMap.Keys.Where(s => mapComp.ShipsOnMap[s].IsStuckAndNotAssisted()).ToList();
+					shipStuck = mapComp.ShipsOnMap.Keys.Where(s => mapComp.ShipsOnMap[s].IsStuckAndNotAssisted() && mapComp.ShipsOnMap[s].BuildingCount > 4).ToList();
 					if (shipStuck.Any())
 						wrecksOnMap = true;
 				}
@@ -1171,7 +1171,7 @@ namespace SaveOurShip2
 		}
 		private void Success(Pawn pawn)
 		{
-			if (ShipName == "Psychic Amplifier")
+			if (ShipName == ResourceBank.ShipDefOf.MechPsychicAmp.label || ShipName == ResourceBank.ShipDefOf.MechPsychicAmp.label.Translate())
 			{
 				Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifierCaptured"), TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifierCapturedDesc"), LetterDefOf.PositiveEvent);
 				ShipInteriorMod2.WorldComp.Unlocks.Add("ArchotechSpore");

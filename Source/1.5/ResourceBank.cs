@@ -302,5 +302,11 @@ namespace SaveOurShip2
         {
 			public static FleckDef SoS2Exhaust_Short;
         }
+
+		[DefOf]
+		public static class ShipDefOf
+        {
+			public static ShipDef MechPsychicAmp;
+		}
 	}
 }
