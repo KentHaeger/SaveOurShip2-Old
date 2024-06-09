@@ -111,7 +111,11 @@ namespace SaveOurShip2
 				Room room = ventTo.GetRoom(Map);
 				ShipMapComp comp = Map.GetComponent<ShipMapComp>();
 				SpaceShipCache ship = comp.ShipsOnMap[comp.ShipIndexOnVec(Position)];
-				int pointsOfDamage = room.CellCount / ship.LifeSupports.Count / 2;
+				int pointsOfDamage = 0;
+				if (ship.LifeSupports.Count > 0)
+				{
+					pointsOfDamage = room.CellCount / ship.LifeSupports.Count / 2;
+				}
 				Command_Action expelSuperheatedAir = new Command_Action
 				{
 					action = delegate

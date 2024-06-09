@@ -1073,7 +1073,7 @@
 			<Flammability>0</Flammability>
 		</statBases>
 		<tickerType>Normal</tickerType>
-		<description>A nuclear-powered engine capable of launching a ship into orbit. Will cause pollution. Not suitable for interplanetary travel.\n\nThrust: 3000\nFuel use: 3 fuel pods/s\nMax takeoff strength: 4000</description>
+		<description>A nuclear-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 3000\nFuel use: 3 fuel pods/s\nMax takeoff strength: 4000</description>
 		<size>(5,5)</size>
 		<receivesSignals>true</receivesSignals>
 		<designationCategory>Ship</designationCategory>
@@ -1602,6 +1602,10 @@
 		<designationHotKey>Misc3</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
 		<resourcesFractionWhenDeconstructed>1</resourcesFractionWhenDeconstructed>
+		<minifiedDef>MinifiedThing</minifiedDef>
+		<thingCategories>
+			<li>Buildings</li>
+		</thingCategories>
 	</ThingDef>
 	<!-- sensors -->
 	<DesignatorDropdownGroupDef>
@@ -2147,7 +2151,7 @@
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<description>Provides docking facilities for shuttles. This advanced maintenance bay uses mechanites to automatically repair damaged components up to half health, and will double the rate at which pawns perform repairs. It will also automatically refuel docked shuttles from its internal storage.\n\nMust be kept clear of obstructions. Place beacons around it to allow Imperial shuttles to land on it.</description>
+		<description>Provides docking facilities for shuttles. This advanced maintenance bay uses mechanites to automatically repair damaged components up to half health, and will double the rate at which pawns perform repairs. It will also automatically refuel docked shuttles from its internal storage.\n\nMust be kept clear of obstructions. Imperial shuttles can land on this without beacons.</description>
 		<size>(5,5)</size>
 		<designationCategory>Ship</designationCategory>
 		<rotatable>false</rotatable>
@@ -2221,7 +2225,7 @@
 			<MaxHitPoints>700</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<description>Provides docking facilities for shuttles, including the superheavy version. This advanced maintenance bay uses mechanites to automatically repair damaged components up to half health, and will double the rate at which pawns perform repairs. It will also automatically refuel docked shuttles from its internal storage.\n\nMust be kept clear of obstructions. Place beacons around it to allow Imperial shuttles to land on it.</description>
+		<description>Provides docking facilities for shuttles, including the superheavy version. This advanced maintenance bay uses mechanites to automatically repair damaged components up to half health, and will double the rate at which pawns perform repairs. It will also automatically refuel docked shuttles from its internal storage.\n\nMust be kept clear of obstructions. Imperial shuttles can land on this without beacons.</description>
 		<size>(7,7)</size>
 		<designationCategory>Ship</designationCategory>
 		<rotatable>false</rotatable>

@@ -1851,8 +1851,26 @@ namespace SaveOurShip2
 		public static bool CanPlaceShipOnVec(IntVec3 v, Map map, bool excludePlayer = false)
 		{
 			RoofDef roof = map.roofGrid.RoofAt(v);
-			if (v.InNoBuildEdgeArea(map) || (roof != null && roof.isThickRoof) || !v.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy) || v.Fogged(map) || v.GetThingList(map).Any(t => t is Building b && (!excludePlayer || b.Faction != Faction.OfPlayer)))
+			if (v.InNoBuildEdgeArea(map))
+			{
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is outside the build area");
 				return false;
+			}
+			else if (roof != null && roof.isThickRoof)
+            {
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is under a mountain");
+				return false;
+			}
+			else if (!v.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy))
+            {
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it does not support heavy buildings");
+				return false;
+			}
+			else if (v.GetThingList(map).Any(t => t is Building b && b.def.passability!=Traversability.Standable && (!excludePlayer || b.Faction != Faction.OfPlayer)))
+            {
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it contains a non-player building");
+				return false;
+			}
 			return true;
 		}
 		public static void LaunchShip(Building core) //make new spacehome, move ship to it and transit to orbit
@@ -2153,7 +2171,8 @@ namespace SaveOurShip2
 				{
 					if (pos.Fogged(targetMap))
 					{
-						return;
+						Log.Message("Tried to land ship in fogged area - oops");
+						targetMap.fogGrid.FloodUnfogAdjacent(pos);
 					}
 				}
 				foreach (IntVec3 pos in targetArea)
@@ -2172,7 +2191,7 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			if (adjustment != IntVec3.Zero) //find adjacent ships
+			if (targetMap.IsSpace() && adjustment != IntVec3.Zero) //find adjacent ships
 			{
 				foreach (IntVec3 pos in targetArea)
 				{

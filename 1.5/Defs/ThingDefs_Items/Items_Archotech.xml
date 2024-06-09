@@ -39,6 +39,7 @@
     <stackLimit>10</stackLimit>
     <statBases>
       <MarketValue>500</MarketValue>
+      <Mass>1</Mass>
     </statBases>
     <thingCategories>
       <li>Items</li>

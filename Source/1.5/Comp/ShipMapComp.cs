@@ -654,7 +654,7 @@ namespace SaveOurShip2
 		{
 			foreach (IAttackTarget item in map.attackTargetsCache.TargetsHostileToFaction(faction))
 			{
-				if (GenHostility.IsActiveThreatTo(item, faction) && !(item.Thing is VehiclePawn))
+				if (GenHostility.IsActiveThreatTo(item, faction) && !(item.Thing is VehiclePawn) && !(item.Thing is Building_Turret))
 				{
 					return false;
 				}

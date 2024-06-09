@@ -488,6 +488,8 @@ namespace SaveOurShip2
 		public override void PostDeSpawn(Map map)
 		{
 			map.GetComponent<ShipMapComp>().Spores.Remove(this);
+			if(Consciousness != null && !ShipInteriorMod2.MoveShipFlag)
+				Consciousness.health.AddHediff(HediffDef.Named("HologramDisconnected"));
 			base.PostDeSpawn(map);
 		}
 
@@ -580,7 +582,7 @@ namespace SaveOurShip2
 			}
 			else if (signal == "PowerTurnedOn" || signal == "FlickedOn")
 			{
-				if (Consciousness != null && Consciousness.health.hediffSet.HasHediff(HediffDef.Named("HologramDisconnected")))
+				if (Consciousness != null && Consciousness.health.hediffSet.HasHediff(HediffDef.Named("HologramDisconnected")) && parent.GetComp<CompPowerTrader>().PowerOn)
 					Consciousness.health.RemoveHediff(Consciousness.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("HologramDisconnected")));
 			}
 		}
