@@ -190,7 +190,7 @@ namespace SaveOurShip2
 			{
 				DerelictShip ship = new DerelictShip();
 				int rarity = Rand.RangeInclusive(1, 2);
-				if (chance == 11)
+				if (chance == 7)
 					ship.wreckLevel = 2;
 				else
 					ship.wreckLevel = 3;
