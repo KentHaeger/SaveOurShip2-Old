@@ -31,7 +31,10 @@ namespace SaveOurShip2.Vehicles
 			VehiclePawn vehicle = (VehiclePawn)parent;
 			if (mapComp?.ShipMapState == ShipMapState.inCombat && vehicle.handlers[0].handlers.Count > 0)
 			{
-                bool launchDisabled = vehicle.Map.roofGrid.Roofed(vehicle.Position) && !ShipInteriorMod2.CanLaunchUnderRoof(vehicle);
+                Map map = vehicle.Map;
+                IntVec3 cell = vehicle.Position;
+
+                bool launchDisabled = map.roofGrid.Roofed(cell) && !ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehicle);
 				if (mapComp.IsPlayerShipMap)
 				{
 					Command_Action board = CommandBoard(vehicle);

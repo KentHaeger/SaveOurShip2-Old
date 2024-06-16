@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "YnB2IqGM8V/dBu4JSMWBWyY2GWWYY2k2yv3MTu/a09W87G0IS+c+XlrzvVePO6EXrT8sVAeuF7lVBvNbOU6TAQ==",
+  "dgSpecHash": "JiYKTNyTpb0WPpqmJrzp3JenIXwq0FOFiYZ6y/DCXQsJbU2mFRNRGmAq3Uj5ql9GLUswg8mS8BsahJlIk+AUww==",
   "success": true,
   "projectFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\Mods\\SaveOurShip2\\Source\\1.5\\RimworldMod.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\kenth\\.nuget\\packages\\krafs.publicizer\\2.2.1\\krafs.publicizer.2.2.1.nupkg.sha512"
+    "C:\\Users\\sindr\\.nuget\\packages\\krafs.publicizer\\2.2.1\\krafs.publicizer.2.2.1.nupkg.sha512"
   ],
   "logs": []
 }
